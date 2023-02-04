@@ -1,0 +1,55 @@
+local player = game:GetService("Players").LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+
+if game.PlaceId == 301549746 then
+    local bhop = false
+    local speed = 50
+
+    local function bhop_movement()
+        while bhop do
+            char.Humanoid.Jump = true
+            wait(0.1)
+            char.Humanoid.Jump = false
+            wait(0.1/speed*100)
+        end
+    end
+
+    local function toggle_bhop()
+        bhop = not bhop
+        if bhop then
+            bhop_movement()
+        end
+    end
+
+    local function set_speed(new_speed)
+        speed = new_speed
+    end
+
+    -- Add GUI for toggling bhop and adjusting speed
+    local frame = Library:CreateWindow({
+        Title = "Bhop Settings",
+        Size = {350, 200},
+        Parent = player.PlayerGui
+    })
+
+    local toggle = Library:CreateToggle({
+        Text = "Toggle Bhop",
+        Parent = frame,
+        Callback = toggle_bhop
+    })
+
+    local slider = Library:CreateSlider({
+        Min = 0,
+        Max = 100,
+        Value = speed,
+        Text = "Speed",
+        Parent = frame,
+        Callback = function(value)
+            set_speed(value)
+        end
+    })
+end
+
+char.Humanoid.Health = char.Humanoid.MaxHealth
